@@ -13,14 +13,23 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model HealthFacility {
+  id                  Int                  @id @default(autoincrement())
+  name                String
+  officer             Officer?
+  HealthcareProviders HealthcareProvider[]
+}
+
 model Officer {
-  id            Int            @id @default(autoincrement())
-  name          String
-  email         String         @unique
-  password      String
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
-  consultations Consultation[]
+  id               Int            @id @default(autoincrement())
+  name             String
+  email            String         @unique
+  password         String
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  consultations    Consultation[]
+  healthFacilityId Int            @unique
+  healthFacility   HealthFacility @relation(fields: [healthFacilityId], references: [id])
 }
 
 model Patient {
@@ -34,11 +43,14 @@ model Patient {
 }
 
 model HealthcareProvider {
-  id            Int            @id @default(autoincrement())
-  name          String
-  consultations Consultation[]
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
+  id               Int                          @id @default(autoincrement())
+  name             String
+  department       HealthCareProviderDepartment
+  consultations    Consultation[]
+  createdAt        DateTime                     @default(now())
+  updatedAt        DateTime                     @updatedAt
+  healthFacilityId Int
+  healthFacility   HealthFacility               @relation(fields: [healthFacilityId], references: [id])
 }
 
 model Consultation {
@@ -55,4 +67,12 @@ model Consultation {
   healthcareProvider   HealthcareProvider @relation(fields: [healthcareProviderId], references: [id])
   createdAt            DateTime           @default(now())
   updatedAt            DateTime           @updatedAt
+}
+
+enum HealthCareProviderDepartment {
+  doctor
+  pharmacist
+  nurse
+  optometrist
+  dietician
 }
