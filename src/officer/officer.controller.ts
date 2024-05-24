@@ -17,7 +17,7 @@ export class OfficerController {
 
   @Post()
   create(@Body() createOfficerDto: CreateOfficerDto) {
-    return this.officerService.create(createOfficerDto);
+    return 'sd';
   }
 
   @Get()
