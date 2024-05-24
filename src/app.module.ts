@@ -7,6 +7,8 @@ import { JwtModule } from '@nestjs/jwt';
 import { APP_PIPE } from '@nestjs/core';
 import { PrismaModule } from './prisma/prisma.module';
 import { AuthModule } from './auth/auth.module';
+import { ConsultationModule } from './consultation/consultation.module';
+import { HealthcareProvidersModule } from './healthcare-providers/healthcare-providers.module';
 
 @Module({
   imports: [
@@ -19,6 +21,8 @@ import { AuthModule } from './auth/auth.module';
       secret: process.env.JWT_SECRET,
       signOptions: { expiresIn: '1d' },
     }),
+    ConsultationModule,
+    HealthcareProvidersModule,
   ],
   controllers: [AppController],
   providers: [

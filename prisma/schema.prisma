@@ -55,7 +55,7 @@ model HealthcareProvider {
 
 model Consultation {
   id                   Int                @id @default(autoincrement())
-  date                 DateTime
+  date                 DateTime           @default(now())
   consultationType     String
   medicalCondition     String
   notes                String?

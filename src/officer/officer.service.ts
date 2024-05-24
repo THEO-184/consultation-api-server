@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 
 import { UpdateOfficerDto } from './dto/update-officer.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
-import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class OfficerService {
