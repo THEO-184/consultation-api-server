@@ -7,9 +7,13 @@ import {
   Param,
   Delete,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import { ConsultationService } from './consultation.service';
-import { CreateConsultationDto } from './dto/create-consultation.dto';
+import {
+  CreateConsultationDto,
+  SearchConsultationsDto,
+} from './dto/create-consultation.dto';
 import { UpdateConsultationDto } from './dto/update-consultation.dto';
 import { AuthGuard } from 'src/auth/guard/auth.guard';
 import { GetUser } from 'src/auth/decorators/officer.decorator';
@@ -21,7 +25,7 @@ export class ConsultationController {
   constructor(private readonly consultationService: ConsultationService) {}
 
   @Post()
-  create(
+  bookConsultation(
     @Body() payload: CreateConsultationDto,
     @GetUser() officer: JwtPayload,
   ) {
@@ -29,8 +33,14 @@ export class ConsultationController {
   }
 
   @Get()
-  findAll() {
-    return this.consultationService.findAll();
+  getPatientConsultation(
+    @Query() searchParams: SearchConsultationsDto,
+    @GetUser('id') officerId: number,
+  ) {
+    return this.consultationService.getPatientConsultation(
+      searchParams,
+      officerId,
+    );
   }
 
   @Get(':id')

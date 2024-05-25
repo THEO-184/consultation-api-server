@@ -1,8 +1,12 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { CreateConsultationDto } from './dto/create-consultation.dto';
+import {
+  CreateConsultationDto,
+  SearchConsultationsDto,
+} from './dto/create-consultation.dto';
 import { UpdateConsultationDto } from './dto/update-consultation.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { JwtPayload } from 'src/auth/dto/auth.dto';
+import { equal } from 'assert';
 
 @Injectable()
 export class ConsultationService {
@@ -68,6 +72,80 @@ export class ConsultationService {
       },
     });
     return { consultation, message: 'consultation booked successfully' };
+  }
+
+  async getPatientConsultation(
+    payload: SearchConsultationsDto,
+    officerId: number,
+  ) {
+    const {
+      consultationType,
+      date,
+      healthcareProvider,
+      medicalCondition,
+      patientName,
+    } = payload;
+    const consultation = await this.prisma.consultation.findMany({
+      where: {
+        AND: [
+          { officerId },
+          {
+            OR: [
+              {
+                date: date ? { equals: new Date(date) } : undefined,
+              },
+              {
+                consultationType: consultationType
+                  ? { contains: consultationType, mode: 'insensitive' }
+                  : undefined,
+              },
+              {
+                healthcareProvider: healthcareProvider
+                  ? {
+                      name: {
+                        contains: healthcareProvider,
+                        mode: 'insensitive',
+                      },
+                    }
+                  : undefined,
+              },
+              {
+                patient: patientName
+                  ? {
+                      OR: [
+                        {
+                          firstName: {
+                            contains: patientName,
+                            mode: 'insensitive',
+                          },
+                        },
+                        {
+                          lastName: {
+                            contains: patientName,
+                            mode: 'insensitive',
+                          },
+                        },
+                      ],
+                    }
+                  : undefined,
+              },
+              {
+                medicalCondition: medicalCondition
+                  ? { contains: medicalCondition }
+                  : undefined,
+              },
+            ],
+          },
+        ],
+      },
+      include: {
+        healthcareProvider: true,
+        officer: true,
+        patient: true,
+      },
+    });
+
+    return { consultation, count: consultation.length };
   }
 
   findAll() {

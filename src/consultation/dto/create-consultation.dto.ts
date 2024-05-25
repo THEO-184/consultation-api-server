@@ -48,3 +48,31 @@ export class CreateConsultationDto {
   @Type(() => PatientDto)
   patient: PatientDto;
 }
+
+export class SearchConsultationsDto {
+  // remove isOPtional when frontend is ready
+
+  @IsString()
+  @IsNotEmpty()
+  @IsOptional()
+  date?: string;
+
+  @IsString()
+  @IsNotEmpty()
+  @IsOptional()
+  patientName?: string;
+
+  @IsString()
+  @IsOptional()
+  healthcareProvider?: string;
+
+  @IsString()
+  @IsNotEmpty()
+  @IsOptional()
+  consultationType?: string;
+
+  @IsString()
+  @IsNotEmpty()
+  @IsOptional()
+  medicalCondition?: string;
+}
