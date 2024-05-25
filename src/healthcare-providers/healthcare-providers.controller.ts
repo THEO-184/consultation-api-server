@@ -12,7 +12,7 @@ import { HealthcareProvidersService } from './healthcare-providers.service';
 import { CreateHealthcareProviderDto } from './dto/create-healthcare-provider.dto';
 import { UpdateHealthcareProviderDto } from './dto/update-healthcare-provider.dto';
 import { AuthGuard } from 'src/auth/guard/auth.guard';
-import { GetUser } from 'src/auth/decorators/officer.decorator';
+import { GetOfficer } from 'src/auth/decorators/officer.decorator';
 
 @UseGuards(AuthGuard)
 @Controller('healthcare-providers')
@@ -27,7 +27,7 @@ export class HealthcareProvidersController {
   }
 
   @Get()
-  findAll(@GetUser('facilityId') facilityId: number) {
+  findAll(@GetOfficer('facilityId') facilityId: number) {
     return this.healthcareProvidersService.getFacilityHealthCareProviders(
       facilityId,
     );

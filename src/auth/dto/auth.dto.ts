@@ -1,4 +1,4 @@
-import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
 export class LoginOfficerDto {
   @IsString()
@@ -9,8 +9,16 @@ export class LoginOfficerDto {
   email: string;
 }
 
+export class PatientLoginDto {
+  @IsEmail()
+  email: string;
+
+  @IsNumber()
+  id: number;
+}
+
 export type JwtPayload = {
   email: string;
   id: number;
-  facilityId: number;
+  facilityId?: number;
 };

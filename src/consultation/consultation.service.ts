@@ -3,10 +3,9 @@ import {
   CreateConsultationDto,
   SearchConsultationsDto,
 } from './dto/create-consultation.dto';
-import { UpdateConsultationDto } from './dto/update-consultation.dto';
+
 import { PrismaService } from 'src/prisma/prisma.service';
 import { JwtPayload } from 'src/auth/dto/auth.dto';
-import { equal } from 'assert';
 
 @Injectable()
 export class ConsultationService {
@@ -146,21 +145,5 @@ export class ConsultationService {
     });
 
     return { consultation, count: consultation.length };
-  }
-
-  findAll() {
-    return `This action returns all consultation`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} consultation`;
-  }
-
-  update(id: number, updateConsultationDto: UpdateConsultationDto) {
-    return `This action updates a #${id} consultation`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} consultation`;
   }
 }

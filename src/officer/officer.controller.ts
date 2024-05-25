@@ -2,15 +2,13 @@ import {
   Controller,
   Get,
   Post,
-  Body,
   Patch,
   Param,
   Delete,
   UseGuards,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { OfficerService } from './officer.service';
-import { CreateOfficerDto } from './dto/create-officer.dto';
-import { UpdateOfficerDto } from './dto/update-officer.dto';
 import { AuthGuard } from 'src/auth/guard/auth.guard';
 
 @UseGuards(AuthGuard)
@@ -19,8 +17,8 @@ export class OfficerController {
   constructor(private readonly officerService: OfficerService) {}
 
   @Post()
-  create(@Body() createOfficerDto: CreateOfficerDto) {
-    return 'sd';
+  create() {
+    return this.officerService.create();
   }
 
   @Get()
@@ -34,8 +32,8 @@ export class OfficerController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateOfficerDto: UpdateOfficerDto) {
-    return this.officerService.update(+id, updateOfficerDto);
+  update(@Param('id', ParseIntPipe) id: number) {
+    return this.officerService.update(id);
   }
 
   @Delete(':id')

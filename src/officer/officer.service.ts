@@ -1,11 +1,14 @@
 import { Injectable } from '@nestjs/common';
 
-import { UpdateOfficerDto } from './dto/update-officer.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class OfficerService {
   constructor(private prisma: PrismaService) {}
+
+  create() {
+    return `This action returns all officer`;
+  }
 
   findAll() {
     return `This action returns all officer`;
@@ -15,7 +18,7 @@ export class OfficerService {
     return `This action returns a #${id} officer`;
   }
 
-  update(id: number, updateOfficerDto: UpdateOfficerDto) {
+  update(id: number) {
     return `This action updates a #${id} officer`;
   }
 
