@@ -17,9 +17,15 @@ export class PatientService {
             name: true,
           },
         },
+
         officer: {
           select: {
             name: true,
+            healthFacility: {
+              select: {
+                name: true,
+              },
+            },
           },
         },
       },

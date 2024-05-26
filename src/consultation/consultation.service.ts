@@ -34,6 +34,7 @@ export class ConsultationService {
         consultationType: payload.consultationType,
         medicalCondition: payload.medicalCondition,
         notes: payload.notes,
+        date: new Date(payload.date),
         officer: { connect: { id: officer.id } },
         healthcareProvider: { connect: { id: payload.healthcareProviderId } },
         patient: {
@@ -84,14 +85,18 @@ export class ConsultationService {
       medicalCondition,
       patientName,
     } = payload;
-    const consultation = await this.prisma.consultation.findMany({
+
+    const startDate = date ? this.startOfDay(date) : undefined;
+    const endDate = date ? this.endOfDay(date) : undefined;
+
+    const consultations = await this.prisma.consultation.findMany({
       where: {
         AND: [
           { officerId },
           {
-            OR: [
+            AND: [
               {
-                date: date ? { equals: new Date(date) } : undefined,
+                date: date ? { gte: startDate, lte: endDate } : undefined,
               },
               {
                 consultationType: consultationType
@@ -100,12 +105,7 @@ export class ConsultationService {
               },
               {
                 healthcareProvider: healthcareProvider
-                  ? {
-                      name: {
-                        contains: healthcareProvider,
-                        mode: 'insensitive',
-                      },
-                    }
+                  ? { id: parseInt(healthcareProvider) }
                   : undefined,
               },
               {
@@ -144,6 +144,18 @@ export class ConsultationService {
       },
     });
 
-    return { consultation, count: consultation.length };
+    return { consultations, count: consultations.length };
   }
+
+  private startOfDay = (dateString: string): Date => {
+    const date = new Date(dateString);
+    date.setUTCHours(0, 0, 0, 0);
+    return date;
+  };
+
+  private endOfDay = (dateString: string): Date => {
+    const date = new Date(dateString);
+    date.setUTCHours(23, 59, 59, 999);
+    return date;
+  };
 }

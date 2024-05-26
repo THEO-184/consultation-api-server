@@ -1,30 +1,17 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  UseGuards,
-} from '@nestjs/common';
+import { Controller, Get, Param, Delete, UseGuards } from '@nestjs/common';
 import { HealthcareProvidersService } from './healthcare-providers.service';
-import { CreateHealthcareProviderDto } from './dto/create-healthcare-provider.dto';
-import { UpdateHealthcareProviderDto } from './dto/update-healthcare-provider.dto';
+
 import { AuthGuard } from 'src/auth/guard/auth.guard';
 import { GetOfficer } from 'src/auth/decorators/officer.decorator';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Healthcare Provider')
 @UseGuards(AuthGuard)
 @Controller('healthcare-providers')
 export class HealthcareProvidersController {
   constructor(
     private readonly healthcareProvidersService: HealthcareProvidersService,
   ) {}
-
-  @Post()
-  create(@Body() createHealthcareProviderDto: CreateHealthcareProviderDto) {
-    return this.healthcareProvidersService.create(createHealthcareProviderDto);
-  }
 
   @Get()
   findAll(@GetOfficer('facilityId') facilityId: number) {
@@ -36,17 +23,6 @@ export class HealthcareProvidersController {
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.healthcareProvidersService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Body() updateHealthcareProviderDto: UpdateHealthcareProviderDto,
-  ) {
-    return this.healthcareProvidersService.update(
-      +id,
-      updateHealthcareProviderDto,
-    );
   }
 
   @Delete(':id')

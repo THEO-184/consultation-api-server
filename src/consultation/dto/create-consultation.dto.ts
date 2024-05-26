@@ -1,7 +1,8 @@
+import { HealthCareProviderDepartment } from '@prisma/client';
 import { Type } from 'class-transformer';
 import {
-  IsDate,
   IsEmail,
+  IsEnum,
   IsNotEmpty,
   IsNumber,
   IsOptional,
@@ -38,11 +39,10 @@ export class CreateConsultationDto {
   @IsNumber()
   healthcareProviderId: number;
   // remove isOPtional when frontend is ready
-  @Type(() => Date)
-  @IsDate()
+  @IsString()
   @IsNotEmpty()
   @IsOptional()
-  date: Date;
+  date?: string;
 
   @ValidateNested()
   @Type(() => PatientDto)
@@ -75,4 +75,97 @@ export class SearchConsultationsDto {
   @IsNotEmpty()
   @IsOptional()
   medicalCondition?: string;
+}
+
+// RESPONSE DTOS
+
+class PatientResponseDto {
+  @IsString()
+  firstName: string;
+
+  @IsString()
+  lastName: string;
+
+  @IsNumber()
+  id: number;
+}
+
+class OfficerResponseDto {
+  @IsNumber()
+  id: number;
+
+  @IsString()
+  name: string;
+}
+
+class HealthCareProvideResponseDto {
+  @IsNumber()
+  id: number;
+
+  @IsString()
+  name: string;
+
+  @IsEnum(HealthCareProviderDepartment)
+  department: HealthCareProviderDepartment;
+}
+class ConsultationResponseDto {
+  @IsNumber()
+  id: number;
+
+  @IsString()
+  date: string;
+
+  @IsString()
+  consultationType: string;
+
+  @IsString()
+  medicalCondition: string;
+
+  @IsString()
+  notes: string;
+
+  @IsNumber()
+  officerId: number;
+
+  @IsNumber()
+  patientId: number;
+
+  @IsNumber()
+  healthcareProviderId: number;
+
+  @IsString()
+  createdAt: string;
+
+  @IsString()
+  updatedAt: string;
+
+  @ValidateNested()
+  @Type(() => HealthCareProvideResponseDto)
+  healthcareProvider: HealthCareProvideResponseDto;
+
+  @ValidateNested()
+  @Type(() => OfficerResponseDto)
+  officer: OfficerResponseDto;
+
+  @ValidateNested()
+  @Type(() => PatientResponseDto)
+  patient: PatientResponseDto;
+}
+
+export class BookConsultationResponseDto {
+  @ValidateNested()
+  @Type(() => ConsultationResponseDto)
+  consultation: ConsultationResponseDto;
+
+  @IsString()
+  message: string;
+}
+
+export class GetPatientConsultationResponseDto {
+  @ValidateNested({ each: true })
+  @Type(() => ConsultationResponseDto)
+  consultations: ConsultationResponseDto[];
+
+  @IsNumber()
+  count: number;
 }

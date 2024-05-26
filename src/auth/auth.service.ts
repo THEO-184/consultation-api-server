@@ -18,6 +18,13 @@ export class AuthService {
   async OfficerLogin(data: LoginOfficerDto) {
     const officer = await this.prisma.officer.findUnique({
       where: { email: data.email },
+      include: {
+        healthFacility: {
+          select: {
+            name: true,
+          },
+        },
+      },
     });
 
     if (!officer) {
@@ -44,7 +51,7 @@ export class AuthService {
 
   async PatientLogin(payload: PatientLoginDto) {
     const patient = await this.prisma.patient.findUnique({
-      where: { id: payload.id, email: payload.email },
+      where: { id: payload.id },
     });
 
     if (!patient) {
